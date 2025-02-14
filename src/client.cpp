@@ -53,10 +53,17 @@ void ClientNetwork::receivePackets(sf::TcpSocket* sock) {
                     if (Game::getInstance()->getStateManager().getGameState()->exists(name)) 
                         Game::getInstance()->getStateManager().getGameState()->players[name]->setPosition({newX, newY});
                 }
+            } else if (type == net::Packet::ClientLeftPacket) {
+                std::string name;
+                last_packet >> name;
+
+                if (Game::getInstance()->getStateManager().getGameState()->exists(name)) {
+                    Game::getInstance()->getStateManager().getGameState()->players.erase(name);
+                }
             }
 
             // 1000Hz
-            // std::this_thread::sleep_for((std::chrono::milliseconds)1);
+            std::this_thread::sleep_for((std::chrono::milliseconds)1);
         }
     }
 }

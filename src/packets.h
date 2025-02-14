@@ -11,6 +11,7 @@ namespace net {
         ClientMovementPacket = 2,
         UpdatePositionPacket = 3,
         UpdatePlayerListPacket = 4,
+        ClientLeftPacket = 5,
     };
 
     enum class TeleportReason: uint8_t {

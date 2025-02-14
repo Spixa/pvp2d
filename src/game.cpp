@@ -13,7 +13,7 @@ Game* Game::getInstance() {
 
 Game::Game()
 :   window_(sf::VideoMode({1280, 720}), "Arbalesto v1", sf::Style::Close | sf::Style::Resize), client(), general_font("../res/fonts/main.ttf"), server_stats(general_font), state_manager() {
-    server_stats.setCharacterSize(20);
+    server_stats.setCharacterSize(15);
 }
 
 void Game::run(std::string const& nickname, std::string const& ip, unsigned short port) {
@@ -69,7 +69,7 @@ void Game::update_ping(sf::Time elapsed) {
         updatePing.restart();
     }
     
-    server_stats.setString("Connected: " + std::to_string(client.last_ping) + "ms\n" + std::to_string( int(1/elapsed.asSeconds())) + " fps");
+    server_stats.setString("Connected: " + std::to_string(client.last_ping) + "ms\n" + std::to_string( int(1/elapsed.asSeconds())) + " fps\n" + "Failed packets: " + std::to_string(failedPackets));
 }
 
 void Game::update(sf::Time elapsed) {

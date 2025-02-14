@@ -3,6 +3,7 @@
 
 class HitboxEntity : public sf::Drawable, public sf::Transformable {
 public:
+    virtual ~HitboxEntity() {}
     void setHitBox(const sf::FloatRect& hbox) { hitbox = hbox; }
 
     sf::FloatRect getGlobalHbox() const {

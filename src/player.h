@@ -1,33 +1,38 @@
 #pragma once
 #include "hbox_entity.h"
+#include "animation.h"
 
 static sf::Font font{"../res//fonts/main.ttf"};
+static sf::Texture nothing{};
+
+struct PlayerSprites {
+    sf::Sprite* body;
+    sf::Sprite* hand;
+    sf::Sprite* feet;
+};
 
 // very boilerplate rn
 class Player : public HitboxEntity {
 public: 
-    Player(std::string const& display_name = "", sf::Vector2f const& spawn = {500.f, 500.f}) : display_name(display_name), displayNameText(font) {
+    Player(std::string const& display_name = "", sf::Vector2f const& spawn = {500.f, 500.f}) : display_name(display_name), displayNameText(font), anim(0.1, this), feet(nothing), hand(nothing), body(nothing) {
         setPosition(spawn);
         setHitBox(sf::FloatRect({0, 0}, {32, 32}));
         
         displayNameText.setPosition({5.f, -25.f});
         displayNameText.setCharacterSize(12);
         displayNameText.setString(display_name);
-        placeholder.setSize({32, 32});
-
-        placeholder.setFillColor(sf::Color::Red);
-        placeholder.setOutlineColor(sf::Color::Black);
-        placeholder.setOutlineThickness(1);
     }
+
+    virtual ~Player() {};
 
     void update(sf::Time dt) {
         update_derived(dt);
 
         move(velo);
         if (moving) {
-            placeholder.setFillColor(sf::Color::Blue);
+            anim.update(1, dt, false);
         } else {
-            placeholder.setFillColor(sf::Color::Red);
+            anim.update(0, dt, false);
         }
     };
 
@@ -36,6 +41,8 @@ public:
     virtual void update_derived(sf::Time dt) = 0;
     virtual void update_per_tick() = 0;
 
+    PlayerSprites getSprites() { return {&body, &hand, &feet}; }
+
     bool isMoving() {
         return moving;
     }
@@ -43,24 +50,28 @@ protected:
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override {
         states.transform *= getTransform();
 
+        target.draw(feet, states);
+        target.draw(body, states);
+        target.draw(hand, states);
+
         target.draw(displayNameText, states);
-        target.draw(placeholder, states);
     }
 protected: // online properties:
     std::string display_name;
     bool moving;
     sf::Vector2f velo;
+private:
+    sf::Sprite body, hand, feet;
+    bool inverted{false};
+    PlayerAnimation anim;
 protected:
     sf::Text displayNameText;
     sf::Font displayNameFont;
-    sf::RectangleShape placeholder{};
 };
 
 class RemotePlayer : public Player {
 public:
-    RemotePlayer(std::string const& name, sf::Vector2f const& spawn) : Player(name, spawn) {
-        placeholder.setFillColor(sf::Color::Blue);
-    }
+    RemotePlayer(std::string const& name, sf::Vector2f const& spawn) : Player(name, spawn) {}
 
     void update_derived(sf::Time dt) override {}
     void update_per_tick() override;

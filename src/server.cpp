@@ -49,10 +49,18 @@ void Server::disconnectClient(server::Client* client_ptr, size_t pos) {
     log << "Client " << client_ptr->socket()->getRemoteAddress().value() << ":" << client_ptr->socket()->getRemotePort() << " disconnected";
     sinfo(log.str());
 
+    std::string name = client_ptr->getName().value();
+
     client_ptr->socket()->disconnect();
     delete client_ptr;
 
     clients.erase(clients.begin() + pos);
+
+    {
+        sf::Packet leave;
+        leave << net::Packet::ClientLeftPacket << name;
+        broadcastPacket(leave);
+    }
 }
 
 void Server::broadcastPacket(sf::Packet& packet) {
