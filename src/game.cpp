@@ -24,6 +24,7 @@ void Game::run(std::string const& nickname, std::string const& ip, unsigned shor
     client.run(); // Note: function creates new thread (client_reception)
 
     state_manager.init();
+    ui_view = window_.getDefaultView();
 
     //window_.setFramerateLimit(256);
     {
@@ -81,7 +82,10 @@ void Game::update(sf::Time elapsed) {
 void Game::render() {
     window_.clear();
 
+    window_.setView(ui_view);
     window_.draw(server_stats);
+
+    window_.setView(state_manager.getCurrentView());
     state_manager.render(window_);
 
     window_.display();

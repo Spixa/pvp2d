@@ -16,6 +16,7 @@ GameState::~GameState() {
 
 void GameState::start() {
     players.insert({player.getDisplayname(), &player});
+    view.setSize(Game::getInstance()->getWindow().getDefaultView().getSize());
 }
 
 void GameState::spawn(std::string const& name, sf::Vector2f pos) {
@@ -28,6 +29,7 @@ bool GameState::exists(std::string const& name) {
 }
 
 void GameState::update(sf::Time dt, ClientNetwork& client, sf::Clock& tick) {
+    view.setCenter(player.getPosition());
 
     for (auto &[name, p] : players) {
         p->update(dt);

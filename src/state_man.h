@@ -15,6 +15,10 @@ public:
         // downcast to GameState
         return std::dynamic_pointer_cast<GameState>(states[0]);
     }
+
+    sf::View& getCurrentView() {
+        return states[selected]->view;
+    }
 protected:
     sf::Clock tick{};
 private:

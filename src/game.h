@@ -44,7 +44,7 @@ private:
 private:
     // drawables
     StateManager state_manager;
-    
+    sf::View ui_view;
     sf::Text server_stats;
 
 };

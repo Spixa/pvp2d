@@ -23,6 +23,7 @@ public:
     virtual ~State() {}
 
     using Ptr = std::shared_ptr<State>;
+    sf::View view{};
 public:
     States getType() const { return type; }
     std::string getName() const { return name; }
