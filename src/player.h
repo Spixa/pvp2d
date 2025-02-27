@@ -17,9 +17,11 @@ public:
     Player(std::string const& display_name = "", sf::Vector2f const& spawn = {500.f, 500.f}) : display_name(display_name), displayNameText(font), anim(0.1, this), feet(nothing), hand(nothing), body(nothing) {
         setPosition(spawn);
         setHitBox(sf::FloatRect({0, 0}, {32, 32}));
+        setScale({0.5, 0.5});
         
-        displayNameText.setPosition({5.f, -25.f});
-        displayNameText.setCharacterSize(12);
+        displayNameText.setPosition({0, -15.f});
+        displayNameText.setStyle(sf::Text::Style::Regular);
+        displayNameText.setCharacterSize(10);
         displayNameText.setString(display_name);
     }
 
@@ -82,7 +84,7 @@ private:
 class ControllingPlayer : public Player {
 public:
     ControllingPlayer(std::string const& disp) : Player(disp) {
-        displayNameText.setFillColor(sf::Color::Green);
+        displayNameText.setFillColor(sf::Color::Blue);
     }
     sf::View playerView;
     void update_derived(sf::Time delta) override;

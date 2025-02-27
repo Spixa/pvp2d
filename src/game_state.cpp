@@ -3,7 +3,7 @@
 
 GameState::GameState() : State("game", States::GameStateType), player(Game::getInstance()->getName()) {
     logger::log("game").info("Loaded game state!");
-   
+    world.start();
 }
 
 GameState::~GameState() {
@@ -17,6 +17,7 @@ GameState::~GameState() {
 void GameState::start() {
     players.insert({player.getDisplayname(), &player});
     view.setSize(Game::getInstance()->getWindow().getDefaultView().getSize());
+    view.zoom(0.3);
 }
 
 void GameState::spawn(std::string const& name, sf::Vector2f pos) {
@@ -30,14 +31,16 @@ bool GameState::exists(std::string const& name) {
 
 void GameState::update(sf::Time dt, ClientNetwork& client, sf::Clock& tick) {
     view.setCenter(player.getPosition());
-
+    world.update(dt);
+    
     for (auto &[name, p] : players) {
         p->update(dt);
     }
 
     // send update pos packet x times a second:
     constexpr int tickrate = 100;
-
+    //constexpr int spt = 1000/100;
+    
     if (tick.getElapsedTime().asMilliseconds() >= 1000/tickrate) {
         if (player.isMoving()) {
             auto pos = player.getPosition();
@@ -57,8 +60,10 @@ void GameState::update(sf::Time dt, ClientNetwork& client, sf::Clock& tick) {
 
 void GameState::draw(sf::RenderTarget& targ, sf::RenderStates states) const {
     states.transform *= getTransform();
+    
+    targ.draw(world, states);
 
     for (auto &[name, p] : players) {
-        targ.draw(*p);
+        targ.draw(*p, states);
     }
 } 

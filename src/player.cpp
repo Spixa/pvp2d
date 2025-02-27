@@ -9,7 +9,11 @@ void ControllingPlayer::update_derived(sf::Time delta) {
     playerView.setSize({float(Game::getInstance()->getWindow().getSize().x), float(Game::getInstance()->getWindow().getSize().y)});
     playerView.setCenter(this->getPosition());
 
-    constexpr float speed = 256.f;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::F)) {
+        // hold sword
+    }
+
+    constexpr float speed = 95.f;
 
     if (Game::getInstance()->getWindow().hasFocus())
         velo = sf::Vector2f{
@@ -23,6 +27,7 @@ void ControllingPlayer::update_derived(sf::Time delta) {
         velo.y = velo.y * dt * speed; 
     }
 
+    // std::cout << 3.f / dt << std::endl;
 
     if (velo.x != 0 || velo.y != 0) {
         moving = true;

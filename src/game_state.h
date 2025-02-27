@@ -1,6 +1,7 @@
 #pragma once
 #include "state.h"
 #include "player.h"
+#include "world.h"
 
 class GameState : public State {
 public:
@@ -15,6 +16,7 @@ protected:
     void draw(sf::RenderTarget&, sf::RenderStates) const override;
 private:
     ControllingPlayer player;
+    World world{};
 public:
     std::unordered_map<std::string, Player*> players{};
 };

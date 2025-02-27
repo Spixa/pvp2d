@@ -82,11 +82,11 @@ void Game::update(sf::Time elapsed) {
 void Game::render() {
     window_.clear();
 
-    window_.setView(ui_view);
-    window_.draw(server_stats);
-
     window_.setView(state_manager.getCurrentView());
     state_manager.render(window_);
+
+    window_.setView(ui_view);
+    window_.draw(server_stats);
 
     window_.display();
 }

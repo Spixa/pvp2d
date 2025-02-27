@@ -14,7 +14,7 @@ FetchContent_Declare(SFML
     SYSTEM)
 FetchContent_MakeAvailable(SFML)
 
-add_executable(game src/main.cpp src/game.cpp src/logger.cpp src/server.cpp src/client.cpp src/game_state.cpp src/player.cpp src/state_man.cpp src/animation.cpp)
+add_executable(game src/main.cpp src/game.cpp src/logger.cpp src/server.cpp src/client.cpp src/game_state.cpp src/player.cpp src/state_man.cpp src/animation.cpp src/world.cpp)
 
 target_compile_features(game PRIVATE cxx_std_17)
-target_link_libraries(game PRIVATE SFML::Graphics SFML::Network)
+target_link_libraries(game PRIVATE SFML::Graphics SFML::Network SFML::Audio)
