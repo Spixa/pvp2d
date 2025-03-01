@@ -119,6 +119,18 @@ class Chunk: public sf::Drawable, public sf::Transformable {
                             selection = sf::IntRect({1 * tile_size.x, tile_size.y}, {tile_size.x, 2*tile_size.y});
                             layer = 1;
                         } break;
+                        case 4: { // sand
+                            selection = sf::IntRect({2 * tile_size.x, tile_size.y}, {tile_size.x, tile_size.y * 2});
+                            layer = 1;
+                        } break;
+                        case 5: { // water
+                            selection = sf::IntRect({3 * tile_size.x, tile_size.y}, {tile_size.x, tile_size.y * 2});
+                            layer = 1;
+                        } break;
+                        case 6: { // funky tree
+                            selection = sf::IntRect({5 * tile_size.x, 0}, {tile_size.x, tile_size.y * 4});
+                            layer = 3;
+                        } break;
                     }
     
                     isometric_tiles[idx]->setTextureRect(selection);
@@ -178,50 +190,17 @@ class Chunk: public sf::Drawable, public sf::Transformable {
           }
       }
     
-    class WorldManipulator {
+    class WorldManipulator : public sf::Drawable, public sf::Transformable  {
     public:
-        WorldManipulator() : cheat("../res/world/cheat.png"), selection_img("../res/world/highlight.png"), selection_sprite(selection_img) {}
-    
-        int getTileIndexFromMouse(sf::RenderWindow* window, Chunk* chunk) {
-            auto mouse = window->mapPixelToCoords(sf::Mouse::getPosition());
-            
-            sf::Vector2i cell{floor_div(mouse.x, chunk->get_tile_size().x), floor_div(mouse.y, chunk->get_tile_size().y)};
-            sf::Vector2u offset{floor_mod(mouse.x, chunk->get_tile_size().x), floor_mod(mouse.y, chunk->get_tile_size().y)};
-            sf::Color color{};
-    
-            if (offset.x >= 0 && offset.y >= 0) { color = cheat.getPixel(offset);  }
-    
-            sf::Vector2i selected =
-            {
-                (cell.y - chunk->get_origin().y) + (cell.x - chunk->get_origin().x),
-                (cell.y - chunk->get_origin().y) - (cell.x - chunk->get_origin().x)  
-            };
-    
-            if (color == sf::Color::Red) selected += {-1, +0};
-            if (color == sf::Color::Blue) selected += {+0, -1};
-            if (color == sf::Color::Green) selected += {+0, +1};
-            if (color == sf::Color::Yellow) selected += {+1, +0};
-    
-            int idx = selected.y * chunk->get_chunk_size().x + selected.x;
-    
-            auto to_screen = [&](int x, int y) -> sf::Vector2i
-            {
-              return sf::Vector2i
-              {
-                (chunk->get_origin().x * chunk->get_tile_size().x) + int( floor( ((x - y) * (chunk->get_tile_size().x)) / 2)),
-                (chunk->get_origin().y * chunk->get_tile_size().y) + int( floor( ((x + y) * (chunk->get_tile_size().y)) / 2))
-              };
-            };
-    
-            if (selected.x < chunk->get_chunk_size().x && selected.y < chunk->get_chunk_size().y && selected.x >=0 && selected.y >= 0) {
-                // within bounds
-                selection_sprite.setPosition(sf::Vector2f{to_screen(selected.x, selected.y)});
-                return idx;
-            }
-    
-            return -1;
+        WorldManipulator() : cheat("../res/world/cheat.png"), selection_img("../res/world/highlight.png"), selection_sprite(selection_img) {
+            selection.setFillColor(sf::Color::Red);
+            selection.setSize({40, 20});
+            selection.setTexture(&selection_img);
         }
     
+        int getTileIndexFromMouse(sf::RenderWindow* window, Chunk* chunk);
+        int getTileStandingOn(Chunk* chunk, sf::Vector2f const& position);
+
         sf::Vector2i to_screen(Chunk* chunk, int x, int y) {
           return sf::Vector2i
           {
@@ -233,15 +212,15 @@ class Chunk: public sf::Drawable, public sf::Transformable {
         auto chunk_world_pos(Chunk* chunk) {
           return chunk->get_tiles()[0]->getPosition();
         }
-    
-        void drawSelection(sf::RenderTarget& target, sf::RenderStates states) const {
-            // too_far for later
-            target.draw(selection_sprite, states);
-        }
+
+        void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
     private:
         sf::Image cheat;
     private:
         sf::Sprite selection_sprite;
+    public:
+        sf::RectangleShape selection;
+    private:
         sf::Texture selection_img;
     
         bool too_far;

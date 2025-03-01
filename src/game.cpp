@@ -33,6 +33,10 @@ void Game::run(std::string const& nickname, std::string const& ip, unsigned shor
         nick << net::Packet::NickPacket << nickname;
 
         client.send(nick);
+
+        sf::Packet ping;
+        ping << net::Packet::PingPacket;
+        client.send(ping);
     }
 
     try {
@@ -70,7 +74,7 @@ void Game::update_ping(sf::Time elapsed) {
         updatePing.restart();
     }
     
-    server_stats.setString("Connected: " + std::to_string(client.last_ping) + "ms\n" + std::to_string( int(1/elapsed.asSeconds())) + " fps\n" + "Failed packets: " + std::to_string(failedPackets));
+    server_stats.setString("Connected: " + std::to_string(client.last_ping) + "ms\n" + std::to_string( int(1/elapsed.asSeconds())) + " fps\n" + "Failed packets: " + std::to_string(failedPackets) + "\nLooking at: " + lookingAt);
 }
 
 void Game::update(sf::Time elapsed) {

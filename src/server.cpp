@@ -95,14 +95,31 @@ void Server::receivePackets(server::Client* client, size_t iter) {
                 reply << Packet::PingPacket;
                 
                 client->send(reply);
-
+                
+                srand(5);
                 for (int j = -1; j < 1; j++) {
                     for (int k = -1; k < 1; k++) {
                         sf::Packet chunk;
                         chunk << Packet::ChunkDataPacket;
                         chunk << int(j) << int(k);
 
-                        for (int i = 0; i < 256; i++) chunk << int(1);
+                        for (int i = 0; i < 256; i++) {
+                            int tree = rand() % 20;
+                            int dead = rand() % 5;
+                            int f = 0;
+
+                            if (tree == 0) {
+                                if (dead == 0) {
+                                    f = 3;
+                                } else {
+                                    f = 2;
+                                }
+                            } else {
+                                f = 1;
+                            }
+
+                            chunk << int(f);
+                        }
 
                         client->send(chunk);
                     }

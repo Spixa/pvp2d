@@ -4,10 +4,6 @@
 
 void ControllingPlayer::update_derived(sf::Time delta) {
     float dt = delta.asSeconds();
-    
-
-    playerView.setSize({float(Game::getInstance()->getWindow().getSize().x), float(Game::getInstance()->getWindow().getSize().y)});
-    playerView.setCenter(this->getPosition());
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::F)) {
         // hold sword

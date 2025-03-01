@@ -16,10 +16,14 @@ class Player : public HitboxEntity {
 public: 
     Player(std::string const& display_name = "", sf::Vector2f const& spawn = {0.f, 0.f}) : display_name(display_name), displayNameText(font), anim(0.1, this), feet(nothing), hand(nothing), body(nothing) {
         setPosition(spawn);
-        setHitBox(sf::FloatRect({0, 0}, {32, 32}));
+        setHitBox(sf::FloatRect({16, 16}, {32, 32}));
         setScale({0.5, 0.5});
         
-        displayNameText.setPosition({0, -15.f});
+        feet.setPosition({-16, -16});
+        body.setPosition({-16, -16});
+        hand.setPosition({-16, -16});
+
+        displayNameText.setPosition({-10.f, -32.f});
         displayNameText.setStyle(sf::Text::Style::Regular);
         displayNameText.setCharacterSize(10);
         displayNameText.setString(display_name);

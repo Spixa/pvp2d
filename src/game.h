@@ -17,6 +17,7 @@ public:
     StateManager& getStateManager() { return state_manager; }
 
     int failedPackets{0};
+    std::string lookingAt{"Nothing"};
     sf::RenderWindow& getWindow() { return window_; }
     std::string const& getName() const { return name; }
 public:
