@@ -18,6 +18,8 @@ enum class ChunkBuilderMode {
 
 class Chunk: public sf::Drawable, public sf::Transformable {
     public:
+        Chunk() {} // risky, but needed for the unordered map
+
         Chunk(sf::Texture* text, int x, int y, ChunkBuilderMode const& mode = ChunkBuilderMode::None) : texture(text) {
             data = new int[size.x*size.y]{0};
     
@@ -47,23 +49,11 @@ class Chunk: public sf::Drawable, public sf::Transformable {
             }
         }
 
-        void generate(ChunkBuilderMode const& mode) {
-            if (mode == ChunkBuilderMode::GrassLand) {
-                sf::Clock a{};
-                for (int i = 0; i < 256; i++) {
-                    srand(a.getElapsedTime().asMicroseconds() + i * 69);
-                    
-                    int tree = rand()%9;
-
-                    if (tree == 0) {
-                        if (rand()%5 == 0)
-                            data[i] = 3;
-                        else
-                            data[i] = 2;
-                    } else {
-                        data[i] = 1;
-                    }
-                } 
+        void load(std::array<int, 256> const& data) {
+            int c = 0;
+            for (auto a : data) {
+                this->data[c] = a;
+                c++;
             }
         }
     
@@ -81,7 +71,7 @@ class Chunk: public sf::Drawable, public sf::Transformable {
     
         bool setTile(int at, int with) {
             if (at >= 0 && at < 256) {
-                data[at] = with;
+                data[at] = with; 
                 return true;
             }
             return false;

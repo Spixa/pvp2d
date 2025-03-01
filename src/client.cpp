@@ -60,6 +60,16 @@ void ClientNetwork::receivePackets(sf::TcpSocket* sock) {
                 if (Game::getInstance()->getStateManager().getGameState()->exists(name)) {
                     Game::getInstance()->getStateManager().getGameState()->players.erase(name);
                 }
+            } else if (type == net::Packet::ChunkDataPacket) {
+                int ox, oy;
+                last_packet >> ox >> oy;
+                
+                std::array<int,256> data{0};
+                for (int i = 0; i < 256; i++) {
+                    last_packet >> data[i];
+                }
+
+                Game::getInstance()->getStateManager().getGameState()->world.loadChunkFromData({ox, oy}, data);
             }
 
             // 1000Hz

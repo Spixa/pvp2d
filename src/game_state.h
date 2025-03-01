@@ -16,7 +16,7 @@ protected:
     void draw(sf::RenderTarget&, sf::RenderStates) const override;
 private:
     ControllingPlayer player;
-    World world{};
 public:
     std::unordered_map<std::string, Player*> players{};
+    World world{};
 };

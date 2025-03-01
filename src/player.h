@@ -14,7 +14,7 @@ struct PlayerSprites {
 // very boilerplate rn
 class Player : public HitboxEntity {
 public: 
-    Player(std::string const& display_name = "", sf::Vector2f const& spawn = {500.f, 500.f}) : display_name(display_name), displayNameText(font), anim(0.1, this), feet(nothing), hand(nothing), body(nothing) {
+    Player(std::string const& display_name = "", sf::Vector2f const& spawn = {0.f, 0.f}) : display_name(display_name), displayNameText(font), anim(0.1, this), feet(nothing), hand(nothing), body(nothing) {
         setPosition(spawn);
         setHitBox(sf::FloatRect({0, 0}, {32, 32}));
         setScale({0.5, 0.5});

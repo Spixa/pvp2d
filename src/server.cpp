@@ -96,6 +96,18 @@ void Server::receivePackets(server::Client* client, size_t iter) {
                 
                 client->send(reply);
 
+                for (int j = -1; j < 1; j++) {
+                    for (int k = -1; k < 1; k++) {
+                        sf::Packet chunk;
+                        chunk << Packet::ChunkDataPacket;
+                        chunk << int(j) << int(k);
+
+                        for (int i = 0; i < 256; i++) chunk << int(1);
+
+                        client->send(chunk);
+                    }
+                }
+
                 break;
             }
             case Packet::NickPacket: {
@@ -126,9 +138,7 @@ void Server::receivePackets(server::Client* client, size_t iter) {
                     sf::Packet list;
                     list << net::Packet::UpdatePlayerListPacket;
 
-                    // std::vector<server::Client*> plClients = clients;
-                    // plClients.erase(plClients.begin() + iter);
-                    client->setPosition({500.f, 500.f});
+                    client->setPosition({0.f, 0.f});
 
                     list << int(clients.size());
 
